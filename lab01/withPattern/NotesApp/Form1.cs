@@ -17,7 +17,7 @@ namespace NotesApp
             InitializeComponent();
         }
 
-        private NoteManager manager = new NoteManager();
+        private NoteManager manager = NoteManager.GetInstance();
 
         private void UpdateList()
         {
@@ -65,13 +65,13 @@ namespace NotesApp
         {
             if (listBoxNotes.SelectedItem == null)
             {
-                MessageBox.Show("Выберите заметку!");
+                MessageBox.Show("Выберите заметку для редактирования!");
                 return;
             }
 
             string selected = listBoxNotes.SelectedItem.ToString();
 
-            EditForm editForm = new EditForm(manager, selected);
+            EditForm editForm = new EditForm(selected);
             editForm.ShowDialog();
 
             UpdateList();
