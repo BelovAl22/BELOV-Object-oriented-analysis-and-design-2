@@ -49,6 +49,8 @@ NoteManager — класс управления заметками
 
 <img width="463" height="255" alt="image" src="https://github.com/user-attachments/assets/a4fb7cbe-2afe-42f5-b5a7-21b45232c1f6" />
 
+Рисунок 3. Главные детали работы Form1
+
 
 4. Использование Singleton во второй форме (EditForm)
 
@@ -64,6 +66,8 @@ NoteManager — класс управления заметками
 <img width="455" height="192" alt="image" src="https://github.com/user-attachments/assets/6db1df34-3dae-44dd-bc37-ab841bde58a1" />
 
 <img width="576" height="321" alt="image" src="https://github.com/user-attachments/assets/1f5697ba-5c0b-491a-bb04-a8a8264af9df" />
+
+Рисунок 4. Детали работы EditForm
 
 5. Решаемая проблема
 
@@ -81,5 +85,6 @@ NoteManager — класс управления заметками
 
 В рамках разработанного приложения паттерн Singleton используется для управления глобальным состоянием системы — списком заметок.
 Хотя в небольших проектах возможно обойтись передачей зависимостей через конструктор, применение Singleton демонстрирует механизм централизованного контроля доступа к общему ресурсу и решает проблему потенциальной рассинхронизации данных при расширении системы.
+
 
 
