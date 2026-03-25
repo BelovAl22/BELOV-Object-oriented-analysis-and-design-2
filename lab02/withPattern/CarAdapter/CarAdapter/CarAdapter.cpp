@@ -127,6 +127,28 @@ bool selectFirst = true;
 #define ID_DODGE 5
 #define ID_CHEVY 6
 
+// =======================
+// FACTORY CLASS
+// =======================
+class CarFactory {
+public:
+    static ICarAdapter* createCar(int id);
+};
+
+// =======================
+// COMPARATOR CLASS  
+// =======================
+class CarComparator {
+public:
+    struct ComparisonResult {
+        wstring winner;
+        int score1;
+        int score2;
+        wstring details;
+    };
+
+    static ComparisonResult compare(ICarAdapter* c1, ICarAdapter* c2);
+};
 
 
 // ---------- Japanese ----------
@@ -202,16 +224,24 @@ public:
     double getWeight() override { return car->getWeightLbs() * 0.453592; }
 };
 
-wstring compareCars(ICarAdapter* c1, ICarAdapter* c2)
+CarComparator::ComparisonResult CarComparator::compare(ICarAdapter* c1, ICarAdapter* c2)
 {
-    int s1 = 0, s2 = 0;
+    ComparisonResult result = {};
+    result.score1 = 0;
+    result.score2 = 0;
 
-    wstring res = L"=== " + c1->getName() + L" VS " + c2->getName() + L" ===\n\n";
+    wstring details = L"=== " + c1->getName() + L" VS " + c2->getName() + L" ===\n\n";
 
     auto check = [&](bool cond, wstring name)
         {
-            if (cond) { s1++; res += name + L": " + c1->getName() + L"\n"; }
-            else { s2++; res += name + L": " + c2->getName() + L"\n"; }
+            if (cond) {
+                result.score1++;
+                details += name + L": " + c1->getName() + L"\n";
+            }
+            else {
+                result.score2++;
+                details += name + L": " + c2->getName() + L"\n";
+            }
         };
 
     check(c1->getMaxSpeedKmh() > c2->getMaxSpeedKmh(), L"Speed");
@@ -222,14 +252,15 @@ wstring compareCars(ICarAdapter* c1, ICarAdapter* c2)
     check(c1->getPrice() < c2->getPrice(), L"Price");
     check(c1->getWeight() < c2->getWeight(), L"Weight");
 
-    res += L"\nScore: " + to_wstring(s1) + L" : " + to_wstring(s2);
+    result.details = details;
+    result.details += L"\nScore: " + to_wstring(result.score1) + L" : " + to_wstring(result.score2);
+    result.winner = (result.score1 > result.score2) ? c1->getName() : c2->getName();
+    result.details += L"\nWinner: " + result.winner;
 
-    res += L"\nWinner: " + (s1 > s2 ? c1->getName() : c2->getName());
-
-    return res;
+    return result;  // ← Возвращаем структуру
 }
 
-ICarAdapter* createCar(int id)
+ICarAdapter* CarFactory::createCar(int id)
 {
     switch (id)
     {
@@ -409,11 +440,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 SetWindowTextW(hText, L"Выберите обе машины!");
                 break;
             }
-            ICarAdapter* c1 = createCar(selectedCar1);
-            ICarAdapter* c2 = createCar(selectedCar2);
+            ICarAdapter* c1 = CarFactory::createCar(selectedCar1);
+            ICarAdapter* c2 = CarFactory::createCar(selectedCar2);
             if (c1 && c2) {
-                wstring result = compareCars(c1, c2);
-                SetWindowTextW(hText, result.c_str());  // ← .c_str()!
+                CarComparator::ComparisonResult result = CarComparator::compare(c1, c2);
+                SetWindowTextW(hText, result.details.c_str());
                 delete c1;
                 delete c2;
             }

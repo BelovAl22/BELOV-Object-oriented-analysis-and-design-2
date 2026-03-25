@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\alexa\\source\\repos\\CarAdapter\\",
+  "WorkspaceRootPath": "C:\\Users\\alexa\\Documents\\GitHub\\BELOV-Object-oriented-analysis-and-design-2\\lab02\\withPattern\\CarAdapter\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D7C77ACD-0782-45B2-8EFC-D0729E716B52}|CarAdapter\\CarAdapter.vcxproj|C:\\Users\\alexa\\source\\repos\\CarAdapter\\CarAdapter\\CarAdapter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{D7C77ACD-0782-45B2-8EFC-D0729E716B52}|CarAdapter\\CarAdapter.vcxproj|C:\\Users\\alexa\\Documents\\GitHub\\BELOV-Object-oriented-analysis-and-design-2\\lab02\\withPattern\\CarAdapter\\CarAdapter\\CarAdapter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{D7C77ACD-0782-45B2-8EFC-D0729E716B52}|CarAdapter\\CarAdapter.vcxproj|solutionrelative:CarAdapter\\CarAdapter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -20,11 +20,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "CarAdapter.cpp",
-              "DocumentMoniker": "C:\\Users\\alexa\\source\\repos\\CarAdapter\\CarAdapter\\CarAdapter.cpp",
+              "DocumentMoniker": "C:\\Users\\alexa\\Documents\\GitHub\\BELOV-Object-oriented-analysis-and-design-2\\lab02\\withPattern\\CarAdapter\\CarAdapter\\CarAdapter.cpp",
               "RelativeDocumentMoniker": "CarAdapter\\CarAdapter.cpp",
-              "ToolTip": "C:\\Users\\alexa\\source\\repos\\CarAdapter\\CarAdapter\\CarAdapter.cpp*",
+              "ToolTip": "C:\\Users\\alexa\\Documents\\GitHub\\BELOV-Object-oriented-analysis-and-design-2\\lab02\\withPattern\\CarAdapter\\CarAdapter\\CarAdapter.cpp*",
               "RelativeToolTip": "CarAdapter\\CarAdapter.cpp*",
-              "ViewState": "AgIAANYAAAAAAAAAAAAqwPoAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAKABAAAAAAAAAAAQwL4BAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-03-24T16:20:20.672Z",
               "EditorCaption": ""
