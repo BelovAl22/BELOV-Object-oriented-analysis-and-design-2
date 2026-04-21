@@ -1,4 +1,4 @@
-<img width="761" height="364" alt="Lab3Memento drawio" src="https://github.com/user-attachments/assets/786db462-b58e-40f5-9ccd-ef8e35b4c34a" /># Диаграмма классов и архитектура приложения
+# Диаграмма классов и архитектура приложения
 <img width="761" height="364" alt="Lab3Memento drawio" src="https://github.com/user-attachments/assets/d2b282bd-99eb-4e3d-a590-96da51b4b271" />
 рисунок 1. Диаграмма Классов
 
