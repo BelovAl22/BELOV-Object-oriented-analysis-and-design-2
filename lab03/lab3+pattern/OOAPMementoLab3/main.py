@@ -99,6 +99,7 @@ class App:
 
         self.car = Car()
         self.history = HistoryManager()
+        self.last_state = None
 
         self.create_widgets()
         self.update_ui()
@@ -139,7 +140,6 @@ class App:
 
         # Buttons
         tk.Button(frame, text="Simulate", command=self.simulate).grid(row=5, column=0, pady=10)
-        tk.Button(frame, text="Save State", command=self.save_state).grid(row=5, column=1)
 
         tk.Button(frame, text="Undo", command=self.undo).grid(row=6, column=0)
         tk.Button(frame, text="Redo", command=self.redo).grid(row=6, column=1)
@@ -185,16 +185,18 @@ class App:
 
     def simulate(self):
         self.update_car_from_ui()
+
+        current_state = self.car.save()
+
+        # сохраняем только если состояние изменилось
+        if self.last_state != current_state:
+            self.history.save(current_state)
+            self.history_list.insert(tk.END,
+                                     f"{current_state.power}hp | {current_state.weight}kg | {current_state.drive}")
+            self.last_state = current_state
+
         t, vmax = self.car.simulate()
         self.result.config(text=f"0-100: {t} s\nMax speed: {vmax} km/h")
-
-    def save_state(self):
-        self.update_car_from_ui()
-        state = self.car.save()
-        self.history.save(state)
-
-        self.history_list.insert(tk.END,
-            f"{state.power}hp | {state.weight}kg | {state.drive}")
 
     def undo(self):
         current = self.car.save()
@@ -202,6 +204,7 @@ class App:
         if state:
             self.car.restore(state)
             self.update_ui()
+            self.last_state = self.car.save()
             self.simulate()
 
     def redo(self):
@@ -210,6 +213,7 @@ class App:
         if state:
             self.car.restore(state)
             self.update_ui()
+            self.last_state = self.car.save()
             self.simulate()
 
 

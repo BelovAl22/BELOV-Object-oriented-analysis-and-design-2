@@ -3,7 +3,7 @@ from tkinter import ttk
 import copy
 
 # =========================
-# ORIGINATOR (упрощённый)
+# ORIGINATOR (без Memento)
 # =========================
 
 class Car:
@@ -32,7 +32,7 @@ class Car:
 
 
 # =========================
-# CARETAKER (грязный вариант)
+# CARETAKER (ломает инкапсуляцию)
 # =========================
 
 class HistoryManager:
@@ -40,15 +40,24 @@ class HistoryManager:
         self.undo_stack = []
         self.redo_stack = []
 
-    def save(self, car):
-        # напрямую копируем внутренности объекта
-        state = {
+    def _get_state(self, car):
+        return {
             "power": car.power,
             "weight": car.weight,
             "drive": car.drive,
             "drag": car.drag,
             "gear_time": car.gear_time
         }
+
+    def _set_state(self, car, state):
+        car.power = state["power"]
+        car.weight = state["weight"]
+        car.drive = state["drive"]
+        car.drag = state["drag"]
+        car.gear_time = state["gear_time"]
+
+    def save(self, car):
+        state = self._get_state(car)
         self.undo_stack.append(copy.deepcopy(state))
         self.redo_stack.clear()
 
@@ -56,57 +65,36 @@ class HistoryManager:
         if not self.undo_stack:
             return
 
-        current = {
-            "power": car.power,
-            "weight": car.weight,
-            "drive": car.drive,
-            "drag": car.drag,
-            "gear_time": car.gear_time
-        }
-
+        current = self._get_state(car)
         self.redo_stack.append(copy.deepcopy(current))
-        state = self.undo_stack.pop()
 
-        # напрямую меняем объект
-        car.power = state["power"]
-        car.weight = state["weight"]
-        car.drive = state["drive"]
-        car.drag = state["drag"]
-        car.gear_time = state["gear_time"]
+        state = self.undo_stack.pop()
+        self._set_state(car, state)
 
     def redo(self, car):
         if not self.redo_stack:
             return
 
-        current = {
-            "power": car.power,
-            "weight": car.weight,
-            "drive": car.drive,
-            "drag": car.drag,
-            "gear_time": car.gear_time
-        }
-
+        current = self._get_state(car)
         self.undo_stack.append(copy.deepcopy(current))
-        state = self.redo_stack.pop()
 
-        car.power = state["power"]
-        car.weight = state["weight"]
-        car.drive = state["drive"]
-        car.drag = state["drag"]
-        car.gear_time = state["gear_time"]
+        state = self.redo_stack.pop()
+        self._set_state(car, state)
 
 
 # =========================
-# GUI (тот же)
+# GUI
 # =========================
 
 class App:
     def __init__(self, root):
         self.root = root
-        self.root.title("Car Simulator (NO Memento)")
+        self.root.title("Car Simulator (NO Memento, Auto History)")
 
         self.car = Car()
         self.history = HistoryManager()
+
+        self.last_state = None
 
         self.create_widgets()
         self.update_ui()
@@ -140,8 +128,7 @@ class App:
         ])
         self.gearbox.grid(row=4, column=1)
 
-        tk.Button(frame, text="Simulate", command=self.simulate).grid(row=5, column=0)
-        tk.Button(frame, text="Save State", command=self.save_state).grid(row=5, column=1)
+        tk.Button(frame, text="Simulate", command=self.simulate).grid(row=5, column=0, columnspan=2)
 
         tk.Button(frame, text="Undo", command=self.undo).grid(row=6, column=0)
         tk.Button(frame, text="Redo", command=self.redo).grid(row=6, column=1)
@@ -180,31 +167,47 @@ class App:
             0.1: "Robotized (0.1s)",
             0.0: "DSG (0.0s)"
         }
-
         self.gearbox.set(gearbox_map[self.car.gear_time])
+
+    def get_state_dict(self):
+        return {
+            "power": self.car.power,
+            "weight": self.car.weight,
+            "drive": self.car.drive,
+            "drag": self.car.drag,
+            "gear_time": self.car.gear_time
+        }
 
     def simulate(self):
         self.update_car_from_ui()
+
+        current_state = self.get_state_dict()
+
+        if self.last_state != current_state:
+            self.history.save(self.car)
+            self.history_list.insert(tk.END,
+                f"{self.car.power}hp | {self.car.weight}kg | {self.car.drive}")
+            self.last_state = copy.deepcopy(current_state)
+
         t, vmax = self.car.simulate()
         self.result.config(text=f"0-100: {t} s\nMax speed: {vmax} km/h")
-
-    def save_state(self):
-        self.update_car_from_ui()
-        self.history.save(self.car)
-
-        self.history_list.insert(tk.END,
-            f"{self.car.power}hp | {self.car.weight}kg | {self.car.drive}")
 
     def undo(self):
         self.history.undo(self.car)
         self.update_ui()
+        self.last_state = self.get_state_dict()
         self.simulate()
 
     def redo(self):
         self.history.redo(self.car)
         self.update_ui()
+        self.last_state = self.get_state_dict()
         self.simulate()
 
+
+# =========================
+# RUN
+# =========================
 
 if __name__ == "__main__":
     root = tk.Tk()
